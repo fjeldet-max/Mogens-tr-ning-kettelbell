@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d120f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mogens Træning">
+<title>Mogens Træning 2.0</title>
+<style>
+:root{--bg:#0b100d;--card:#141d17;--card2:#1b281f;--text:#f4f7f4;--muted:#b9c4bc;--accent:#9fd47f;--line:#2b3a30;--warn:#f3c96d}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#0a0f0c,#111a14);color:var(--text)}
+.wrap{max-width:780px;margin:auto;padding:14px 12px 96px}.hero{padding:24px 4px 8px}
+.kicker{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:2rem;line-height:1.05;margin:.35rem 0} h2{font-size:1.15rem;margin:0 0 8px} h3{font-size:1.03rem;margin:0 0 4px}
+p{line-height:1.45}.muted{color:var(--muted)}
+.card,.plan-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 10px 26px rgba(0,0,0,.18)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.badge{font-size:.78rem;font-weight:800;padding:6px 9px;border-radius:999px;background:var(--card2);color:var(--accent);white-space:nowrap}
+.btn-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px}
+.bigbtn{display:block;text-decoration:none;text-align:left;padding:20px;border-radius:22px;background:linear-gradient(180deg,#213428,#17231c);border:1px solid #355241;color:#fff;box-shadow:0 12px 28px rgba(0,0,0,.25)}
+.bigbtn strong{display:block;font-size:1.35rem;margin-bottom:4px}.bigbtn span{color:#d7e2da;display:block}
+.smallbtn{display:inline-block;text-decoration:none;padding:10px 14px;border-radius:13px;background:var(--card2);color:#fff;border:1px solid var(--line);font-weight:800}
+.section{display:none}.section.active{display:block}.topbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.exercise{padding:16px 0;border-top:1px solid var(--line)}.exercise:first-of-type{border-top:0}
+.exercise img{width:100%;display:block;border-radius:18px;margin:12px 0;border:1px solid #e8ece9;background:#fff;cursor:zoom-in}
+.meta{font-size:.88rem;color:var(--warn);font-weight:800;margin-top:5px}.cue{font-size:.93rem;color:#dbe3dd;line-height:1.45;margin-top:6px}
+.levels,.modegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.level,.modeBtn{background:var(--card2);border:1px solid var(--line);color:var(--muted);border-radius:13px;padding:11px 6px;text-align:center;font-weight:900}
+.level.active,.modeBtn.active{outline:2px solid var(--accent);color:#fff}
+ul{margin:.5rem 0 .2rem;padding-left:1.25rem}li{margin:.35rem 0}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kcol{background:var(--card2);border:1px solid var(--line);padding:10px 12px;border-radius:14px}.kcol strong{display:block;color:#fff;margin-bottom:4px}
+.timerBox{position:sticky;bottom:8px;background:rgba(20,29,23,.96);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:20px;padding:12px;margin-top:16px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.time{font-size:2.6rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.04em;text-align:center}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}button{font:inherit;border:0;border-radius:13px;padding:12px;font-weight:900}
+.primary{background:var(--accent);color:#0c140e}.secondary{background:var(--card2);color:#fff;border:1px solid var(--line)}
+.note{border-left:4px solid var(--warn);padding-left:12px;color:#ebe2c8}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:9999;padding:14px;align-items:center;justify-content:center}
+.modal.open{display:flex}.modal img{max-width:100%;max-height:94vh;border-radius:14px;background:#fff}
+.modal .close{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;background:#fff;color:#111;border-radius:999px;padding:10px 13px;font-weight:900}
+.footer{font-size:.82rem;color:var(--muted);line-height:1.45;padding:8px 4px}
+@media(max-width:600px){.columns{grid-template-columns:1fr}h1{font-size:1.8rem}}
+
+/* Version 2 */
+.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.stat{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.stat strong{display:block;font-size:1.45rem;color:#fff}.stat span{font-size:.78rem;color:var(--muted)}
+.history{display:grid;gap:8px;margin-top:10px}.historyItem{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:11px 12px}
+.historyItem strong{display:block}.historyItem small{color:var(--muted)}
+.completeBtn{width:100%;background:var(--accent);color:#0c140e;margin-top:8px}.completeBtn.saved{background:#355241;color:#fff}
+.weightlog{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}.weightlog label{font-size:.84rem;color:var(--muted);font-weight:700}.weightlog input{width:88px;background:#0e1711;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit}.weightlog span{font-size:.82rem;color:var(--muted)}
+.installHint{border-left:4px solid var(--accent);padding-left:12px}.version2{color:var(--accent);font-weight:900}.dangerText{color:var(--warn)}
+@media(max-width:600px){.dashboard{grid-template-columns:1fr 1fr 1fr}.stat strong{font-size:1.25rem}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section id="home" class="section active">
+<header class="hero"><div class="kicker">Mogens • Træning <span class="version2">2.0</span></div><h1>Vælg dagens program</h1>
+<p class="muted">Tre enkle valg. Lunges og split squat er sat på pause, indtil din fysioterapeut har godkendt dem igen.</p></header>
+
+<div class="btn-grid">
+<a href="#" class="bigbtn" onclick="showSection('p18');return false;"><strong>18 minutter • lav energi</strong><span>Kort, roligt og knævenligt.</span></a>
+<a href="#" class="bigbtn" onclick="showSection('p30');return false;"><strong>30 minutter</strong><span>Helkrop • enkelt • god til sommerhus og hverdage</span></a>
+<a href="#" class="bigbtn" onclick="showSection('p45');return false;"><strong>45 minutter</strong><span>Mere ryg, bagkæde, core og stabilitet</span></a>
+</div>
+<div class="card"><div class="row"><h2>Din træning</h2><span class="badge">Gemmes på telefonen</span></div>
+<div class="dashboard"><div class="stat"><strong id="statTotal">0</strong><span>gennemført</span></div><div class="stat"><strong id="statWeek">0</strong><span>denne uge</span></div><div class="stat"><strong id="statLast">–</strong><span>seneste</span></div></div>
+<div id="historyList" class="history"></div></div>
+<div class="card installHint"><div class="row"><h2>På din iPhone</h2><span class="badge">Version 2</span></div><p class="muted">Når appen ligger på en webadresse, kan den lægges på hjemmeskærmen og åbnes næsten som en almindelig app. Det gør vi som næste trin.</p></div>
+
+
+<div class="card"><div class="row"><h2>Plan for progression</h2><span class="badge">Version 2</span></div>
+<ul><li>Vi kører disse programmer som fast base nu</li><li>Første almindelige revision efter cirka 6 uger</li><li>Lunges og split squat kommer kun tilbage efter grønt lys fra fysioterapeuten</li><li>Ved revision skifter vi typisk 2 til 3 øvelser, mens basisøvelserne bevares</li></ul></div>
+</section>
+
+<section id="p18" class="section">
+<div class="topbar"><a href="#" class="smallbtn" onclick="showSection('home');return false;">← Forside</a><a href="#" class="smallbtn" onclick="showSection('p30');return false;">30 min</a><a href="#" class="smallbtn" onclick="showSection('p45');return false;">45 min</a></div>
+<header class="hero"><div class="kicker">Mogens • Let dag</div><h1>Kettlebell 18</h1>
+<p class="muted">Til dage med lav energi. RPE 3 til 4. Du skal føle, at du kunne have lavet lidt mere, når du er færdig.</p></header>
+
+<div class="plan-card"><div class="row"><h2>Opvarmning</h2><span class="badge">4 min</span></div>
+<ul><li>1 min rolig gang på stedet</li><li>1 min hoftehængsel uden vægt</li><li>1 min let squat i smertefri dybde eller sæt dig/rejs dig fra stol</li><li>1 min skuldercirkler og rolig bevægelighed</li></ul></div>
+
+<div class="plan-card"><div class="row"><h2>Hovedblok</h2><span class="badge">10 min</span></div>
+<p class="muted">5 øvelser. 40 sekunders arbejde og 20 sekunders skift. Kør 2 runder.</p>
+<div class="exercise"><h3>1. Kettlebell deadlift</h3><div class="meta">8 eller 12 kg</div><img src="oevelse_01.webp" alt="Kettlebell deadlift" loading="lazy"><div class="cue">Bagkæde og balder. Rolig bevægelse og lang ryg.</div></div>
+<div class="exercise"><h3>2. Enarms row</h3><div class="meta">8 kg • 20 sekunder pr. side</div><img src="oevelse_02.webp" alt="Enarms row teknik" loading="lazy"><div class="cue">Styrker ryggen uden at belaste knæet unødigt.</div></div>
+<div class="exercise"><h3>3. Enarms floor press</h3><div class="meta">4 eller 8 kg • 20 sekunder pr. side</div><img src="oevelse_03.webp" alt="Enarms floor press" loading="lazy"><div class="cue">Rolig presstyrke for bryst, triceps og skulder.</div></div>
+<div class="exercise"><h3>4. Suitcase march</h3><div class="meta">8 kg • 20 sekunder pr. side</div><img src="oevelse_04.webp" alt="Suitcase march" loading="lazy"><div class="cue">Core og stabilitet. Løft fødderne kun så højt som føles behageligt.</div></div>
+<div class="exercise"><h3>5. Stående enarms press</h3><div class="meta">4 eller 8 kg • 20 sekunder pr. side</div><img src="oevelse_05.webp" alt="Stående enarms press" loading="lazy"><div class="cue">Roligt pres over hovedet. Spænd let i maven.</div></div>
+</div>
+
+<div class="plan-card"><div class="row"><h2>Afslutning</h2><span class="badge">4 min</span></div>
+<ul><li>2 min rolig gang og vejrtrækning</li><li>1 min hofter og baglår</li><li>1 min bryst og skuldre</li></ul></div>
+
+<div class="plan-card logCard" data-log-plan="18"><div class="row"><h2>Gem dagens træning</h2><span class="badge">Historik</span></div><p class="muted">Dine valgte vægte gemmes sammen med træningen på denne telefon.</p><button class="completeBtn" onclick="saveWorkout('18',this)">✓ Gem som gennemført</button></div>
+<div class="timerBox"><div class="time" id="time18">18:00</div><div class="btns"><button class="primary" onclick="toggleTimer('18')">Start / pause</button><button class="secondary" onclick="resetTimer('18',1080)">Nulstil</button></div></div>
+</section>
+
+<section id="p30" class="section">
+<div class="topbar"><a href="#" class="smallbtn" onclick="showSection('home');return false;">← Forside</a><a href="#" class="smallbtn" onclick="showSection('p18');return false;">18 min</a><a href="#" class="smallbtn" onclick="showSection('p45');return false;">45 min</a></div>
+<header class="hero"><div class="kicker">Mogens • Program 1</div><h1>Kettlebell 30</h1><p class="muted">30 minutters helkropstræning. Lunges er midlertidigt taget ud.</p></header>
+
+<div class="plan-card"><div class="row"><h2>Dagens niveau</h2><span class="badge">RPE</span></div>
+<div class="levels"><button class="level" data-plan="30" data-level="let">Let dag</button><button class="level active" data-plan="30" data-level="normal">Normal</button><button class="level" data-plan="30" data-level="god">God dag</button></div>
+<p id="levelText30" class="cue"><strong>Normal:</strong> RPE 5 til 6. Roligt og kontrolleret tempo.</p></div>
+
+<div class="plan-card"><div class="row"><h2>Opvarmning</h2><span class="badge">5 min</span></div>
+<ul><li>1 min rolig gang på stedet</li><li>1 min hoftehængsel uden vægt</li><li>1 min squat i smertefri dybde</li><li>1 min skuldercirkler</li><li>1 min let deadlift med 8 kg</li></ul></div>
+
+<div class="plan-card"><div class="row"><h2>Hovedblok</h2><span class="badge">20 min</span></div><p class="muted">40 sekunders arbejde, 20 sekunders skift. 3 runder.</p>
+<div class="exercise"><h3>1. Goblet squat</h3><div class="meta">8 kg nu • 12 kg som næste trin</div><img src="oevelse_06.webp" alt="Goblet squat teknik" loading="lazy"><div class="cue">Ben, balder og core. Brug kun en dybde der er behagelig for højre knæ.</div></div>
+<div class="exercise"><h3>2. Kettlebell swing</h3><div class="meta">8 kg nu • senere 12 kg</div><img src="oevelse_07.webp" alt="Kettlebell swing teknik" loading="lazy"><div class="cue">Hoftekraft og bagkæde. Hoften skaber bevægelsen.</div></div>
+<div class="exercise"><h3>3. Enarms row</h3><div class="meta">8 kg • 20 sekunder pr. side</div><img src="oevelse_08.webp" alt="Enarms row teknik" loading="lazy"><div class="cue">Øvre ryg og skulderstabilitet.</div></div>
+<div class="exercise"><h3>4. Stående enarms press</h3><div class="meta">4 eller 8 kg • 20 sekunder pr. side</div><img src="oevelse_09.webp" alt="Stående enarms press" loading="lazy"><div class="cue">Skulderstyrke og core. Denne erstatter reverse lunge i første periode.</div></div>
+<div class="exercise"><h3>5. Enarms floor press</h3><div class="meta">4 eller 8 kg • 20 sekunder pr. side</div><img src="oevelse_10.webp" alt="Enarms floor press" loading="lazy"><div class="cue">Presstyrke og skulderkontrol.</div></div>
+<div class="exercise"><h3>6. Suitcase march</h3><div class="meta">8 kg • 20 sekunder pr. side</div><img src="oevelse_11.webp" alt="Suitcase march" loading="lazy"><div class="cue">Core og bækkenstabilitet.</div></div>
+</div>
+
+<div class="plan-card"><div class="row"><h2>Afslutning</h2><span class="badge">5 min</span></div><ul><li>2 min rolig gang og vejrtrækning</li><li>1 min hofter og baglår</li><li>1 min bryst og skuldre</li><li>1 min rolig bevægelighed</li></ul></div>
+<div class="plan-card logCard" data-log-plan="30"><div class="row"><h2>Gem dagens træning</h2><span class="badge">Historik</span></div><p class="muted">Dine valgte vægte gemmes sammen med træningen på denne telefon.</p><button class="completeBtn" onclick="saveWorkout('30',this)">✓ Gem som gennemført</button></div>
+<div class="timerBox"><div class="time" id="time30">30:00</div><div class="btns"><button class="primary" onclick="toggleTimer('30')">Start / pause</button><button class="secondary" onclick="resetTimer('30',1800)">Nulstil</button></div></div>
+</section>
+
+<section id="p45" class="section">
+<div class="topbar"><a href="#" class="smallbtn" onclick="showSection('home');return false;">← Forside</a><a href="#" class="smallbtn" onclick="showSection('p18');return false;">18 min</a><a href="#" class="smallbtn" onclick="showSection('p30');return false;">30 min</a></div>
+<header class="hero"><div class="kicker">Mogens • Program 2</div><h1>Kettlebell 45</h1><p class="muted">Mere bagkæde, ryg, core og stabilitet. Split squat er midlertidigt taget ud.</p></header>
+
+<div class="plan-card"><div class="row"><h2>Dagens niveau</h2><span class="badge">RPE</span></div>
+<div class="levels"><button class="level" data-plan="45" data-level="let">Let dag</button><button class="level active" data-plan="45" data-level="normal">Normal</button><button class="level" data-plan="45" data-level="god">God dag</button></div>
+<p id="levelText45" class="cue"><strong>Normal:</strong> RPE 5 til 6. Kontrolleret styrketræning uden udmattelse.</p></div>
+
+<div class="plan-card"><div class="row"><h2>Træningssted</h2><span class="badge">Valg</span></div>
+<div class="modegrid"><button class="modeBtn active" data-mode="sommerhus">Sommerhus</button><button class="modeBtn" data-mode="puregym">PureGym</button><button class="modeBtn" data-mode="fri">Valgfrit</button></div>
+<p id="modeText" class="cue"><strong>Sommerhus:</strong> Brug 4, 8 og 12 kg. Arbejd med kontrol og god teknik.</p></div>
+
+<div class="plan-card"><div class="row"><h2>Opvarmning</h2><span class="badge">7 min</span></div>
+<ul><li>1 min gang på stedet</li><li>1 min hoftehængsel</li><li>1 min squat i smertefri dybde</li><li>1 min skuldercirkler</li><li>1 min let deadlift</li><li>1 min rolig march</li><li>1 min let swing eller ekstra bevægelighed</li></ul></div>
+
+<div class="plan-card"><div class="row"><h2>Blok A • Kraft og ben</h2><span class="badge">ca. 14 min</span></div><p class="muted">40 sekunders arbejde, 20 sekunders skift. 3 runder.</p>
+<div class="exercise"><h3>1. Kettlebell deadlift</h3><div class="meta">Tung og kontrolleret</div><img src="oevelse_12.webp" alt="Kettlebell deadlift" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>8 eller 12 kg</div><div class="kcol"><strong>PureGym</strong>12 til 20 kg</div></div><div class="cue">Bagkæde, balder og ryg.</div></div>
+<div class="exercise"><h3>2. Kettlebell swing</h3><div class="meta">Eksplosiv hofte • kontrolleret puls</div><img src="oevelse_13.webp" alt="Kettlebell swing teknik" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>8 eller 12 kg</div><div class="kcol"><strong>PureGym</strong>12 til 16 kg</div></div><div class="cue">Hoftekraft og bagkæde.</div></div>
+<div class="exercise"><h3>3. Enarms row</h3><div class="meta">20 sekunder pr. side</div><img src="oevelse_14.webp" alt="Enarms row teknik" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>8 eller 12 kg</div><div class="kcol"><strong>PureGym</strong>12 til 18 kg</div></div><div class="cue">Øvre ryg og skulderstabilitet.</div></div>
+<div class="exercise"><h3>4. Goblet squat</h3><div class="meta">Smertefri dybde</div><img src="oevelse_15.webp" alt="Goblet squat teknik" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>8 eller 12 kg</div><div class="kcol"><strong>PureGym</strong>8 til 16 kg</div></div><div class="cue">Denne erstatter split squat i første periode. Stop før knæet provokeres.</div></div>
+</div>
+
+<div class="plan-card"><div class="row"><h2>Blok B • Stabilitet og core</h2><span class="badge">ca. 14 min</span></div>
+<div class="exercise"><h3>5. Stående enarms press</h3><div class="meta">20 sekunder pr. side</div><img src="oevelse_16.webp" alt="Stående enarms press" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>4 eller 8 kg</div><div class="kcol"><strong>PureGym</strong>6 til 12 kg</div></div><div class="cue">Skulderstyrke og core.</div></div>
+<div class="exercise"><h3>6. Single leg RDL</h3><div class="meta">20 sekunder pr. ben</div><img src="oevelse_17.webp" alt="Single leg RDL" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>4 eller 8 kg</div><div class="kcol"><strong>PureGym</strong>8 til 12 kg</div></div><div class="cue">Balance, hoftekontrol og bagkæde. Hold bevægelsen lille, hvis balancen udfordres.</div></div>
+<div class="exercise"><h3>7. Enarms floor press</h3><div class="meta">20 sekunder pr. side</div><img src="oevelse_18.webp" alt="Enarms floor press" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>4 eller 8 kg</div><div class="kcol"><strong>PureGym</strong>8 til 14 kg</div></div><div class="cue">Presstyrke og skulderkontrol.</div></div>
+<div class="exercise"><h3>8. Suitcase march</h3><div class="meta">20 sekunder pr. side</div><img src="oevelse_19.webp" alt="Suitcase march" loading="lazy"><div class="columns"><div class="kcol"><strong>Sommerhus</strong>8 eller 12 kg</div><div class="kcol"><strong>PureGym</strong>12 til 20 kg</div></div><div class="cue">Core og bækkenstabilitet.</div></div>
+</div>
+
+<div class="plan-card"><div class="row"><h2>Afslutning</h2><span class="badge">10 min</span></div><ul><li>2 min rolig gang og vejrtrækning</li><li>2 min skuldermobilitet</li><li>2 min hofter og baglår</li><li>2 min bryst og skuldre</li><li>2 min rolig nedkørsel</li></ul></div>
+<div class="plan-card logCard" data-log-plan="45"><div class="row"><h2>Gem dagens træning</h2><span class="badge">Historik</span></div><p class="muted">Dine valgte vægte gemmes sammen med træningen på denne telefon.</p><button class="completeBtn" onclick="saveWorkout('45',this)">✓ Gem som gennemført</button></div>
+<div class="timerBox"><div class="time" id="time45">45:00</div><div class="btns"><button class="primary" onclick="toggleTimer('45')">Start / pause</button><button class="secondary" onclick="resetTimer('45',2700)">Nulstil</button></div></div>
+</section>
+
+<div class="footer">Lunges og split squat er sat på pause. De genindføres først, når din fysioterapeut har sagt god for dem.</div>
+</div>
+
+<div class="modal" id="imgModal"><button class="close" id="closeModal">Luk</button><img id="modalImg" alt=""></div>
+
+<script>
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+const levelCopy30={
+  let:'<strong>Let dag:</strong> RPE 3 til 4. Brug lette vægte og tag længere pauser.',
+  normal:'<strong>Normal:</strong> RPE 5 til 6. Roligt og kontrolleret tempo.',
+  god:'<strong>God dag:</strong> RPE 6 til 7. Du må gerne gå lidt tungere, men teknikken skal være skarp.'
+};
+const levelCopy45={
+  let:'<strong>Let dag:</strong> RPE 3 til 4. Brug lette vægte og gennemfør gerne kun 2 runder pr. blok.',
+  normal:'<strong>Normal:</strong> RPE 5 til 6. Kontrolleret styrketræning uden udmattelse.',
+  god:'<strong>God dag:</strong> RPE 6 til 7. Øg vægten lidt, men stop før teknikken falder.'
+};
+document.querySelectorAll('.level').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const plan=btn.dataset.plan;
+    document.querySelectorAll(`.level[data-plan="${plan}"]`).forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`levelText${plan}`).innerHTML=(plan==='30'?levelCopy30:levelCopy45)[btn.dataset.level];
+  });
+});
+const modeCopy={
+  sommerhus:'<strong>Sommerhus:</strong> Brug 4, 8 og 12 kg. Arbejd med kontrol og god teknik.',
+  puregym:'<strong>PureGym:</strong> Brug gerne tungere kettlebells i deadlift, row og suitcase march.',
+  fri:'<strong>Valgfrit:</strong> Vælg den tungeste vægt du kan kontrollere sikkert den dag.'
+};
+document.querySelectorAll('.modeBtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.modeBtn').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('modeText').innerHTML=modeCopy[btn.dataset.mode];
+  });
+});
+const timers={
+  '18':{remaining:1080,running:false,interval:null,displayId:'time18'},
+  '30':{remaining:1800,running:false,interval:null,displayId:'time30'},
+  '45':{remaining:2700,running:false,interval:null,displayId:'time45'}
+};
+function paintTimer(key){
+  const t=timers[key];
+  const m=Math.floor(t.remaining/60).toString().padStart(2,'0');
+  const s=(t.remaining%60).toString().padStart(2,'0');
+  document.getElementById(t.displayId).textContent=`${m}:${s}`;
+}
+function toggleTimer(key){
+  const t=timers[key];
+  t.running=!t.running;
+  if(t.running){
+    t.interval=setInterval(()=>{
+      if(t.remaining>0){t.remaining--;paintTimer(key);}
+      else{clearInterval(t.interval);t.running=false;}
+    },1000);
+  } else clearInterval(t.interval);
+}
+function resetTimer(key,total){
+  const t=timers[key];
+  clearInterval(t.interval);t.running=false;t.remaining=total;paintTimer(key);
+}
+paintTimer('18');paintTimer('30');paintTimer('45');
+const modal=document.getElementById('imgModal');
+const modalImg=document.getElementById('modalImg');
+document.querySelectorAll('.exercise img').forEach(el=>{
+  el.addEventListener('click',()=>{modalImg.src=el.src;modal.classList.add('open');});
+});
+document.getElementById('closeModal').addEventListener('click',()=>modal.classList.remove('open'));
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open');});
+
+
+// Version 2: lokal træningshistorik og vægtregistrering
+const STORAGE_KEY='mogensTrainingV2';
+function getTrainingData(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{history:[],weights:{}};}catch(e){return {history:[],weights:{}};}
+}
+function setTrainingData(data){localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}
+function slugExercise(t){return t.toLowerCase().replace(/[^a-z0-9æøå]+/g,'_').replace(/^_|_$/g,'');}
+function installWeightInputs(){
+  document.querySelectorAll('#p18 .exercise,#p30 .exercise,#p45 .exercise').forEach(ex=>{
+    if(ex.querySelector('.weightlog')) return;
+    const section=ex.closest('.section');
+    const plan=section.id.replace('p','');
+    const name=(ex.querySelector('h3')?.textContent||'Øvelse').replace(/^\d+\.\s*/,'').trim();
+    const key=plan+'_'+slugExercise(name);
+    const data=getTrainingData();
+    const current=data.weights[key]??'';
+    const box=document.createElement('div');
+    box.className='weightlog';
+    box.innerHTML=`<label>Min vægt i dag</label><input type="number" inputmode="decimal" min="0" step="0.5" value="${current}" data-weight-key="${key}" aria-label="Vægt til ${name}"><span>kg</span>`;
+    ex.querySelector('.meta')?.insertAdjacentElement('afterend',box);
+  });
+  document.querySelectorAll('[data-weight-key]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      const d=getTrainingData();
+      if(inp.value==='') delete d.weights[inp.dataset.weightKey]; else d.weights[inp.dataset.weightKey]=Number(inp.value);
+      setTrainingData(d);
+    });
+  });
+}
+function currentLevel(plan){
+  const b=document.querySelector(`.level.active[data-plan="${plan}"]`);
+  return b ? b.textContent.trim() : (plan==='18'?'Let dag':'Normal');
+}
+function currentMode(plan){
+  if(plan!=='45') return '';
+  const b=document.querySelector('.modeBtn.active');
+  return b ? b.textContent.trim() : 'Sommerhus';
+}
+function saveWorkout(plan,btn){
+  const d=getTrainingData();
+  const weights={};
+  document.querySelectorAll(`#p${plan} [data-weight-key]`).forEach(inp=>{
+    const name=inp.closest('.exercise')?.querySelector('h3')?.textContent.replace(/^\d+\.\s*/,'').trim();
+    if(name && inp.value!=='') weights[name]=Number(inp.value);
+  });
+  const now=new Date();
+  d.history.unshift({id:Date.now(),date:now.toISOString(),plan:Number(plan),level:currentLevel(plan),mode:currentMode(plan),weights});
+  d.history=d.history.slice(0,60);
+  setTrainingData(d);
+  btn.textContent='✓ Træningen er gemt'; btn.classList.add('saved');
+  updateDashboard();
+  setTimeout(()=>{btn.textContent='✓ Gem som gennemført';btn.classList.remove('saved');},2200);
+}
+function startOfWeek(d){
+  const x=new Date(d); const day=(x.getDay()+6)%7; x.setHours(0,0,0,0); x.setDate(x.getDate()-day); return x;
+}
+function updateDashboard(){
+  const d=getTrainingData(), h=d.history||[];
+  const now=new Date(), sw=startOfWeek(now);
+  document.getElementById('statTotal').textContent=h.length;
+  document.getElementById('statWeek').textContent=h.filter(x=>new Date(x.date)>=sw).length;
+  document.getElementById('statLast').textContent=h[0]?`${h[0].plan} min`:'–';
+  const list=document.getElementById('historyList');
+  if(!h.length){list.innerHTML='<div class="historyItem"><small>Ingen træninger gemt endnu. Når du trykker “Gem som gennemført”, kommer de frem her.</small></div>';return;}
+  list.innerHTML='<div class="row"><strong>Seneste træninger</strong><button class="secondary" style="padding:8px 10px" onclick="clearHistory()">Ryd historik</button></div>'+h.slice(0,5).map(x=>{
+    const dt=new Date(x.date).toLocaleDateString('da-DK',{day:'2-digit',month:'2-digit'});
+    const extra=[x.level,x.mode].filter(Boolean).join(' • ');
+    return `<div class="historyItem"><strong>${dt} • ${x.plan} minutter</strong><small>${extra}</small></div>`;
+  }).join('');
+}
+function clearHistory(){
+  if(!confirm('Vil du rydde træningshistorikken? Dine senest brugte vægte bevares.')) return;
+  const d=getTrainingData(); d.history=[]; setTrainingData(d); updateDashboard();
+}
+installWeightInputs();
+updateDashboard();
+</script>
+</body>
+</html>
